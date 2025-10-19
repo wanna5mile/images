@@ -1,5 +1,3 @@
-// new url:https://script.google.com/macros/s/AKfycbyKCuTDoxk5MBATbZ5wIj4VTRI2v8uMsj2M68e0khzAKOHrdSjeye_u6-dqtFguVyRS/exec
-// new id:AKfycbyKCuTDoxk5MBATbZ5wIj4VTRI2v8uMsj2M68e0khzAKOHrdSjeye_u6-dqtFguVyRS
 document.addEventListener("DOMContentLoaded", async () => {
   // 🔗 Google Apps Script Web App URL
   const apiUrl = "https://script.google.com/macros/s/AKfycbyKCuTDoxk5MBATbZ5wIj4VTRI2v8uMsj2M68e0khzAKOHrdSjeye_u6-dqtFguVyRS/exec";
@@ -38,9 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       card.className = "img-card";
 
       const img = document.createElement("img");
-      // ⬇️ EDITED LINE: Now using file.imgRawLink as the primary source.
-      // The original fallback to imgRawLink is no longer needed here since
-      // that is what is used by default now.
+      // Uses file.imgRawLink as the primary image source for the preview.
       img.src = file.imgRawLink; 
       img.alt = file.title || "Untitled";
       img.loading = "lazy";
