@@ -1,45 +1,47 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  // Your Google Apps Script Web App URL
+  // 🔗 Google Apps Script Web App URL
   const apiUrl = "https://script.google.com/macros/s/AKfycbzcTQep9aiDC7DieUXuvAo-iK56YdB-yW8L6yadswzBzqgdEdunuJy42Bnfp0rOZYzt/exec";
 
   const gallery = document.getElementById("gallery");
   const searchInput = document.getElementById("search");
 
-  // 🌀 Add a loading spinner while fetching
+  // 🌀 Loading indicator
   const loader = document.createElement("div");
   loader.className = "loader";
   loader.innerHTML = `<div class="spinner"></div><p>Loading images...</p>`;
   gallery.appendChild(loader);
 
   try {
-    // 🔄 Fetch live JSON data from your Google Sheet (which syncs from GitHub)
+    // 🧠 Fetch live data
     const res = await fetch(apiUrl, { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const rows = await res.json();
 
-    loader.remove(); // Remove loader once data is loaded
+    loader.remove();
 
-    // 🧹 Validate and filter only image-type rows
+    // ✅ Filter valid images
     const validImages = rows.filter(f =>
       f.imgRawLink &&
-      f.imgRawLink.match(/\.(png|jpg|jpeg|gif|webp)$/i)
+      /\.(png|jpe?g|gif|webp)$/i.test(f.imgRawLink)
     );
 
     if (validImages.length === 0) {
-      gallery.innerHTML = "<p style='color:gray;'>No valid image files found.</p>";
+      gallery.innerHTML = "<p style='color:gray;'>No images found.</p>";
       return;
     }
 
-    // 🖼️ Create cards for each image
+    // 🖼️ Render image cards
     validImages.forEach(file => {
       const card = document.createElement("div");
       card.className = "img-card";
 
       const img = document.createElement("img");
-      img.src = file.imgPrevLink || file.imgRawLink;
-      img.alt = file.title || "Unnamed";
+      img.src = file.imgPrevLink || file.imgRawLink; // fallback to raw if preview missing
+      img.alt = file.title || "Untitled";
       img.loading = "lazy";
-      img.onerror = () => (img.src = "https://via.placeholder.com/200x200?text=Image+Missing");
+      img.onerror = () => {
+        img.src = "https://via.placeholder.com/200x200?text=Image+Missing";
+      };
 
       const label = document.createElement("div");
       label.className = "img-name";
@@ -52,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       card.append(img, label, copied);
       gallery.appendChild(card);
 
-      // 📋 Copy image raw link on click
+      // 📋 Copy image link on click
       card.addEventListener("click", async () => {
         try {
           await navigator.clipboard.writeText(file.imgRawLink);
@@ -64,12 +66,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
 
-    // 🔍 Search/filter functionality
+    // 🔍 Live search
     searchInput?.addEventListener("input", e => {
       const term = e.target.value.toLowerCase();
       document.querySelectorAll(".img-card").forEach(card => {
-        const visible = card.querySelector(".img-name").textContent.toLowerCase().includes(term);
-        card.style.display = visible ? "block" : "none";
+        const name = card.querySelector(".img-name").textContent.toLowerCase();
+        card.style.display = name.includes(term) ? "block" : "none";
       });
     });
 
