@@ -1,0 +1,62 @@
+/**
+ * Self-updating API for GitHub images.
+ * 1️⃣ Fetches image files from GitHub
+ * 2️⃣ Syncs them to Google Sheet
+ * 3️⃣ Returns JSON response for the website
+ */
+
+function doGet() {
+  const username = "wanna5mile";
+  const repo = "images";
+  const path = "img";
+  const branch = "main";
+
+  const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/${path}?ref=${branch}`;
+  const rawBase = `https://raw.githubusercontent.com/${username}/${repo}/${branch}/${path}/`;
+
+  const SHEET_ID = "1o6nNW7O03Oo41zLVwGMpwGxROl1c8lZVJW0jRnjWte8";
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getActiveSheet();
+
+  try {
+    // Fetch GitHub folder
+    const response = UrlFetchApp.fetch(apiUrl, {
+      headers: { "User-Agent": "GoogleScript" },
+      muteHttpExceptions: true,
+    });
+
+    const data = JSON.parse(response.getContentText());
+    if (!Array.isArray(data)) throw new Error("Invalid GitHub API response");
+
+    // Extract image info
+    const rows = data
+      .filter(f => f.type === "file" && f.name.match(/\.(png|jpg|jpeg|gif|webp)$/i))
+      .map(f => [
+        f.name,                       // Title
+        `=IMAGE("${rawBase + f.name}")`, // Preview formula
+        rawBase + f.name,             // Raw link
+      ]);
+
+    // Clear & update sheet
+    sheet.clearContents();
+    sheet.getRange("A1:C1").setValues([["Title", "Image Preview", "Raw Link"]]);
+    if (rows.length > 0) {
+      sheet.getRange(2, 1, rows.length, 3).setValues(rows);
+    }
+
+    // Create a clean JSON response for your site
+    const jsonData = rows.map(r => ({
+      title: r[0],
+      imgPrevLink: r[1],
+      imgRawLink: r[2],
+    }));
+
+    return ContentService
+      .createTextOutput(JSON.stringify(jsonData))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ error: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
