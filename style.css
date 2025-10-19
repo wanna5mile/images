@@ -6,6 +6,9 @@ body {
   margin: 0;
   padding: 0;
   text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* === Header === */
@@ -37,6 +40,8 @@ main {
   gap: 20px;
   padding: 20px;
   justify-items: center;
+  flex: 1;
+  align-content: start;
 }
 
 /* === Image Cards === */
@@ -46,14 +51,23 @@ main {
   overflow: hidden;
   position: relative;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   width: 100%;
   max-width: 220px;
+  border: 2px solid transparent;
 }
+
 .img-card:hover {
   transform: scale(1.05);
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
 }
+
+/* ✅ Subtle container glow on copy */
+.img-card.copied {
+  border-color: #00ffae;
+  box-shadow: 0 0 20px rgba(0, 255, 174, 0.3);
+}
+
 .img-card img {
   width: 100%;
   height: auto;
@@ -61,6 +75,7 @@ main {
   object-fit: cover;
   display: block;
 }
+
 .img-name {
   padding: 8px;
   font-size: 0.85em;
@@ -79,7 +94,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 255, 160, 0.15);
+  background: rgba(0, 255, 160, 0.08);
   color: #00ffae;
   font-weight: 600;
   font-size: 0.9em;
@@ -92,25 +107,35 @@ main {
   opacity: 1;
 }
 
-/* === Loader === */
-.loader {
+/* === Loader & Error Centering === */
+.loader,
+.error-message {
+  position: fixed;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #888;
-  padding: 3rem;
+  justify-content: center;
+  color: #aaa;
+  background: #0f0f0f;
+  z-index: 1000;
+  text-align: center;
 }
+
 .spinner {
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
   border: 4px solid #2a2a2a;
   border-top-color: #00ffae;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-bottom: 12px;
 }
+
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* === Responsive Tweaks === */
