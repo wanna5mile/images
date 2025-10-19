@@ -1,0 +1,79 @@
+body {
+  background: #0f0f0f;
+  color: #eee;
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+header {
+  padding: 20px;
+  background: #161616;
+  border-bottom: 1px solid #222;
+}
+
+#search {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  width: 240px;
+  background: #222;
+  color: white;
+  outline: none;
+}
+
+main {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.img-card {
+  background: #1b1b1b;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.img-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.img-card img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+}
+
+.img-name {
+  padding: 6px;
+  font-size: 0.8em;
+  background: #111;
+  color: #bbb;
+  border-top: 1px solid #222;
+}
+
+.copied {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 255, 160, 0.2);
+  color: #00ffae;
+  font-weight: bold;
+  font-size: 0.9em;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.img-card.copied .copied {
+  opacity: 1;
+}
