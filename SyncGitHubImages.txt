@@ -30,15 +30,19 @@ function doGet() {
     // Extract image info
     const rows = data
       .filter(f => f.type === "file" && f.name.match(/\.(png|jpg|jpeg|gif|webp)$/i))
-      .map(f => [
-        f.name,                       // Title
-        `=IMAGE("${rawBase + f.name}")`, // Preview formula
-        rawBase + f.name,             // Raw link
-      ]);
+      .map(f => {
+        const rawLink = rawBase + f.name;
+        return [
+          f.name,               // Title
+          `=IMAGE("${rawLink}")`, // Preview formula (for Sheet's benefit)
+          rawLink,              // Raw link
+        ];
+      });
 
     // Clear & update sheet
     sheet.clearContents();
-    sheet.getRange("A1:C1").setValues([["Title", "Image Preview", "Raw Link"]]);
+    // ⬇️ Updated Sheet Header for clarity
+    sheet.getRange("A1:C1").setValues([["Title", "Sheet Image Preview", "Raw Image Link"]]);
     if (rows.length > 0) {
       sheet.getRange(2, 1, rows.length, 3).setValues(rows);
     }
@@ -46,7 +50,9 @@ function doGet() {
     // Create a clean JSON response for your site
     const jsonData = rows.map(r => ({
       title: r[0],
-      imgPrevLink: r[1],
+      // ⬇️ EDITED LINE: Now using the raw link (r[2]) for imgPrevLink.
+      // This forces the client-side JS to use the raw link for the preview.
+      imgPrevLink: r[2],
       imgRawLink: r[2],
     }));
 
