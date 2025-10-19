@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const SHEET_ID = "1AbCdEfGhIJkLMNOPqrSTuVWxyz1234567890"; // your real ID
+  const SHEET_ID = "1o6nNW7O03Oo41zLVwGMpwGxROl1c8lZVJW0jRnjWte8"; // sheet ID
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
   const gallery = document.getElementById("gallery");
