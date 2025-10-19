@@ -1,25 +1,27 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  // ✅ New Google Apps Script API endpoint
   const apiUrl = "https://script.google.com/macros/s/AKfycbzcTQep9aiDC7DieUXuvAo-iK56YdB-yW8L6yadswzBzqgdEdunuJy42Bnfp0rOZYzt/exec";
 
   const gallery = document.getElementById("gallery");
   const searchInput = document.getElementById("search");
 
-  // Clear existing content just in case
-  if (gallery) gallery.innerHTML = "";
+  // Add simple loader
+  const loader = document.createElement("div");
+  loader.className = "loader";
+  loader.innerHTML = `<div class="spinner"></div><p>Loading images...</p>`;
+  gallery.appendChild(loader);
 
   try {
-    // Fetch data from your Apps Script JSON endpoint
     const res = await fetch(apiUrl, { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const rows = await res.json();
 
+    loader.remove(); // remove loader when data arrives
+
     if (!Array.isArray(rows) || rows.length === 0) {
-      gallery.innerHTML = "<p style='color:gray;'>No images found in GitHub folder.</p>";
+      gallery.innerHTML = "<p style='color:gray;'>No images found.</p>";
       return;
     }
 
-    // Create image cards dynamically
     rows.forEach(file => {
       const card = document.createElement("div");
       card.className = "img-card";
@@ -40,7 +42,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       card.append(img, label, copied);
       gallery.appendChild(card);
 
-      // Copy raw image link to clipboard when clicked
       card.addEventListener("click", async () => {
         try {
           await navigator.clipboard.writeText(file.imgRawLink);
@@ -52,7 +53,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
 
-    // 🔍 Simple live search
     searchInput?.addEventListener("input", e => {
       const term = e.target.value.toLowerCase();
       document.querySelectorAll(".img-card").forEach(card => {
