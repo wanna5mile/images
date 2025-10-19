@@ -1,3 +1,4 @@
+/* === Base === */
 body {
   background: #0f0f0f;
   color: #eee;
@@ -7,6 +8,7 @@ body {
   text-align: center;
 }
 
+/* === Header === */
 header {
   padding: 20px;
   background: #161616;
@@ -20,82 +22,107 @@ header {
   border-radius: 8px;
   width: 240px;
   background: #222;
-  color: white;
+  color: #fff;
   outline: none;
+  transition: background 0.2s ease;
+}
+#search:focus {
+  background: #2a2a2a;
 }
 
+/* === Main Gallery Grid === */
 main {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 20px;
   padding: 20px;
+  justify-items: center;
 }
 
+/* === Image Cards === */
 .img-card {
   background: #1b1b1b;
   border-radius: 12px;
   overflow: hidden;
   position: relative;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  width: 100%;
+  max-width: 220px;
 }
-
 .img-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
 }
-
 .img-card img {
   width: 100%;
-  display: block;
-  aspect-ratio: 1/1;
+  height: auto;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
+  display: block;
 }
-
 .img-name {
-  padding: 6px;
-  font-size: 0.8em;
+  padding: 8px;
+  font-size: 0.85em;
   background: #111;
   color: #bbb;
   border-top: 1px solid #222;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
+/* === Copied Overlay === */
 .copied {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 255, 160, 0.2);
+  background: rgba(0, 255, 160, 0.15);
   color: #00ffae;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 0.9em;
+  border-radius: 12px;
   opacity: 0;
   transition: opacity 0.3s ease;
+  pointer-events: none;
 }
-
 .img-card.copied .copied {
   opacity: 1;
 }
+
+/* === Loader === */
 .loader {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #777;
-  font-family: sans-serif;
-  padding: 2rem;
+  color: #888;
+  padding: 3rem;
 }
 .spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #ddd;
-  border-top-color: #444;
+  width: 42px;
+  height: 42px;
+  border: 4px solid #2a2a2a;
+  border-top-color: #00ffae;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
+  to { transform: rotate(360deg); }
+}
+
+/* === Responsive Tweaks === */
+@media (max-width: 500px) {
+  #search {
+    width: 90%;
+  }
+  main {
+    gap: 15px;
+    padding: 15px;
+  }
+  .img-card {
+    max-width: 160px;
   }
 }
