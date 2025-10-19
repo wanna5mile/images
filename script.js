@@ -36,7 +36,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       card.className = "img-card";
 
       const img = document.createElement("img");
-      img.src = file.imgPrevLink || file.imgRawLink; // fallback to raw if preview missing
+      // ⬇️ EDITED LINE: Now using file.imgRawLink as the primary source.
+      // The original fallback to imgRawLink is no longer needed here since
+      // that is what is used by default now.
+      img.src = file.imgRawLink; 
       img.alt = file.title || "Untitled";
       img.loading = "lazy";
       img.onerror = () => {
