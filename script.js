@@ -1,6 +1,8 @@
+// new url:https://script.google.com/macros/s/AKfycbyKCuTDoxk5MBATbZ5wIj4VTRI2v8uMsj2M68e0khzAKOHrdSjeye_u6-dqtFguVyRS/exec
+// new id:AKfycbyKCuTDoxk5MBATbZ5wIj4VTRI2v8uMsj2M68e0khzAKOHrdSjeye_u6-dqtFguVyRS
 document.addEventListener("DOMContentLoaded", async () => {
   // 🔗 Google Apps Script Web App URL
-  const apiUrl = "https://script.google.com/macros/s/AKfycbzcTQep9aiDC7DieUXuvAo-iK56YdB-yW8L6yadswzBzqgdEdunuJy42Bnfp0rOZYzt/exec";
+  const apiUrl = "https://script.google.com/macros/s/AKfycbyKCuTDoxk5MBATbZ5wIj4VTRI2v8uMsj2M68e0khzAKOHrdSjeye_u6-dqtFguVyRS/exec";
 
   const gallery = document.getElementById("gallery");
   const searchInput = document.getElementById("search");
