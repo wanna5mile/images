@@ -1,50 +1,52 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const username = "wanna5mile";
-  const repo = "wanna5mile.github.io";
-  const path = "system/images";
-  const branch = "main";
-  const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/${path}?ref=${branch}`;
-  const rawBase = `https://raw.githubusercontent.com/${username}/${repo}/${branch}/${path}/`;
+  const SHEET_ID = "1AbCdEfGhIJkLMNOPqrSTuVWxyz1234567890"; // your real ID
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
   const gallery = document.getElementById("gallery");
   const searchInput = document.getElementById("search");
 
   try {
-    const res = await fetch(apiUrl);
-    const files = await res.json();
+    const res = await fetch(url);
+    const text = await res.text();
 
-    const imageFiles = files.filter(f => f.type === "file" && /\.(png|jpg|jpeg|gif|webp)$/i.test(f.name));
+    // Google wraps the JSON inside "google.visualization.Query.setResponse(...)"
+    const json = JSON.parse(text.substring(47, text.length - 2));
+    const rows = json.table.rows.map(r => ({
+      name: r.c[0]?.v,
+      url: r.c[1]?.v,
+      tags: r.c[2]?.v || "",
+      category: r.c[3]?.v || ""
+    }));
 
-    // Create image cards
-    imageFiles.forEach(file => {
-      const imgCard = document.createElement("div");
-      imgCard.className = "img-card";
+    rows.forEach(file => {
+      const card = document.createElement("div");
+      card.className = "img-card";
 
       const img = document.createElement("img");
-      img.src = rawBase + file.name;
+      img.src = file.url;
       img.alt = file.name;
 
-      const name = document.createElement("div");
-      name.className = "img-name";
-      name.textContent = file.name;
+      const label = document.createElement("div");
+      label.className = "img-name";
+      label.textContent = file.name;
 
       const copied = document.createElement("div");
       copied.className = "copied";
       copied.textContent = "Copied!";
 
-      imgCard.appendChild(img);
-      imgCard.appendChild(name);
-      imgCard.appendChild(copied);
-      gallery.appendChild(imgCard);
+      card.appendChild(img);
+      card.appendChild(label);
+      card.appendChild(copied);
+      gallery.appendChild(card);
 
-      imgCard.addEventListener("click", async () => {
-        await navigator.clipboard.writeText(img.src);
-        imgCard.classList.add("copied");
-        setTimeout(() => imgCard.classList.remove("copied"), 1000);
+      card.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(file.url);
+        card.classList.add("copied");
+        setTimeout(() => card.classList.remove("copied"), 1000);
       });
     });
 
-    // 🔍 Search Filter
+    // Simple search
     searchInput.addEventListener("input", e => {
       const term = e.target.value.toLowerCase();
       document.querySelectorAll(".img-card").forEach(card => {
@@ -52,8 +54,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         card.style.display = visible ? "block" : "none";
       });
     });
+
   } catch (err) {
-    console.error("Failed to fetch images:", err);
+    console.error("Failed to load Google Sheet:", err);
     gallery.innerHTML = "<p style='color:red;'>Error loading images</p>";
   }
 });
