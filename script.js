@@ -1,25 +1,25 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  // 🔗 Google Apps Script Web App URL
+  // Google Apps Script Web App URL
   const apiUrl = "https://script.google.com/macros/s/AKfycbyKCuTDoxk5MBATbZ5wIj4VTRI2v8uMsj2M68e0khzAKOHrdSjeye_u6-dqtFguVyRS/exec";
 
   const gallery = document.getElementById("gallery");
   const searchInput = document.getElementById("search");
 
-  // 🌀 Loading indicator
+  // Loading indicator
   const loader = document.createElement("div");
   loader.className = "loader";
   loader.innerHTML = `<div class="spinner"></div><p>Loading images...</p>`;
   gallery.appendChild(loader);
 
   try {
-    // 🧠 Fetch live data
+    // Fetch live data
     const res = await fetch(apiUrl, { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const rows = await res.json();
 
     loader.remove();
 
-    // ✅ Filter valid images
+    // Filter valid images
     const validImages = rows.filter(f =>
       f.imgRawLink &&
       /\.(png|jpe?g|gif|webp)$/i.test(f.imgRawLink)
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // 🖼️ Render image cards
+    // Render image cards
     validImages.forEach(file => {
       const card = document.createElement("div");
       card.className = "img-card";
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       card.append(img, label, copied);
       gallery.appendChild(card);
 
-      // 📋 Copy image link on click
+      // Copy image link on click
       card.addEventListener("click", async () => {
         try {
           await navigator.clipboard.writeText(file.imgRawLink);
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
 
-    // 🔍 Live search
+    // Live search
     searchInput?.addEventListener("input", e => {
       const term = e.target.value.toLowerCase();
       document.querySelectorAll(".img-card").forEach(card => {
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
   } catch (err) {
-    console.error("❌ Failed to load images:", err);
+    console.error("Failed to load images:", err);
     gallery.innerHTML = `<p style='color:red;'>Error loading images: ${err.message}</p>`;
   }
 });
